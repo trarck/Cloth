@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Cloth
 {
-    public class ClothSimulation
+    public class Cloth:MonoBehaviour
     {
         protected int m_Column=10;
         protected int m_Row=10;

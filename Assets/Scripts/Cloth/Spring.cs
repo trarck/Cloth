@@ -13,8 +13,6 @@ namespace Cloth
 
     public class Spring
     {
-
-
         //A点
         protected Particle m_ParticleA;
         //B点
