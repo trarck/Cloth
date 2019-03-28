@@ -8,20 +8,20 @@ namespace Cloth
 {
     public class ClothSimulation:MonoBehaviour
     {
-        protected int m_Column=20;
-        protected int m_Row=20;
+        protected int m_Column=10;
+        protected int m_Row=10;
         protected Vector2 m_GridSize=new Vector2(4f,4f);
 
         List<Particle> m_Particles;
         List<Spring> m_Springs;
 
-        float m_StructStiffness = 50.75f;
+        float m_StructStiffness = 5.075f*6;
         float m_StructDamping = 0.25f;
 
-        float m_ShearStiffness = 50.75f;
+        float m_ShearStiffness = 5.075f *6;
         float m_ShearDamping = 0.25f;
 
-        float m_BledStiffness = 50.95f;
+        float m_BledStiffness = 5.075f * 6;
         float m_BledDamping = 0.25f;
 
         float m_Mass = 10f;
@@ -53,7 +53,7 @@ namespace Cloth
             m_Particles = new List<Particle>();
             int u = m_Column + 1;
             int v = m_Row + 1;
-            float particleMass = 1f;// m_Mass/(m_Column*m_Row);
+            float particleMass = 0.1f;// m_Mass/(m_Column*m_Row);
             for (int j = 0; j <= m_Column; ++j)
             {
                 for(int i = 0; i <= m_Row; ++i)
@@ -135,30 +135,30 @@ namespace Cloth
         {
             if (m_Springs == null) return;
 
-            foreach(Spring spring in m_Springs)
-            {
-                Vector3 middle=Vector3.zero;
+            //foreach(Spring spring in m_Springs)
+            //{
+            //    Vector3 middle=Vector3.zero;
 
-                switch (spring.type)
-                {
-                    case SpringType.Struct:
-                        Gizmos.color = Color.red;
-                        middle = (spring.particleA.position + spring.particleB.position) * 0.5f+new Vector3(0,0.2f,0);
-                        break;
-                    case SpringType.Shear:
-                        Gizmos.color = Color.green;
-                        middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.4f, 0);
-                        break;
-                    case SpringType.Blend:
-                        Gizmos.color = Color.blue;
-                        middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.8f, 0);
-                        break;
-                }
+            //    switch (spring.type)
+            //    {
+            //        case SpringType.Struct:
+            //            Gizmos.color = Color.red;
+            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f+new Vector3(0,0.2f,0);
+            //            break;
+            //        case SpringType.Shear:
+            //            Gizmos.color = Color.green;
+            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.4f, 0);
+            //            break;
+            //        case SpringType.Blend:
+            //            Gizmos.color = Color.blue;
+            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.8f, 0);
+            //            break;
+            //    }
 
-                //Gizmos.DrawLine(spring.particleA.position, middle);
-                //Gizmos.DrawLine(middle, spring.particleB.position);
-                Gizmos.DrawLine(spring.particleA.position, spring.particleB.position);
-            }
+            //    //Gizmos.DrawLine(spring.particleA.position, middle);
+            //    //Gizmos.DrawLine(middle, spring.particleB.position);
+            //    Gizmos.DrawLine(spring.particleA.position, spring.particleB.position);
+            //}
         }
 
         void SetUpPoints()
@@ -219,7 +219,7 @@ namespace Cloth
             if (m_System != null)
             {
                 //m_System.Step();
-                m_System.Update(Time.fixedDeltaTime*20);
+                m_System.Update(Time.fixedDeltaTime*10);
             }
         }
     }

@@ -4,13 +4,16 @@ using UnityEngine;
 
 namespace Cloth.Verlet
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class VerletSystem
     {
         protected List<Particle> m_Particles = new List<Particle>();
         protected List<Spring> m_Springs = new List<Spring>();
 
-        protected Vector3 m_GravityAcceleration=new Vector3(0, -0.0981f, 0);
-        protected float m_AirDamping= 0.125f;
+        protected Vector3 m_GravityAcceleration=new Vector3(0, -0.00981f*5.0f, 0);
+        protected float m_AirDamping = 0.0125f*5;
 
         float m_StepInterval=0.02f;
         float m_DoubleStepInterval= 0.0004f;
@@ -103,7 +106,7 @@ namespace Cloth.Verlet
                 }
                 float deltaTimeMass = m_StepInterval / particle.mass;
                 particle.velocity = particle.velocity+ particle.resultantForce * deltaTimeMass;
-
+                //原算法使用旧的速度。但实际测试会出问题。改为当前速度。
                 particle.position = particle.position+ particle.velocity * m_StepInterval;
 
                 //particle.velocity *= m_StepInterval;
