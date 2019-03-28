@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cloth
+namespace Cloth.MSS
 {
     public enum SpringType
     {
@@ -48,17 +48,17 @@ namespace Cloth
                 Vector3 deltaVelocity = m_ParticleA.velocity - m_ParticleB.velocity;
                 float dampingForce = -m_Damping * Vector3.Dot(deltaVelocity, direction);
                 Vector3 force = (springForce + dampingForce) * direction;
-                if (debug)
-                {
-                    //Debug.Log("[force]:" + force.x + "," + force.y + "," + force.z
-                    //    + "[term]:" + springForce + "," + dampingForce
-                    //    + "[len]:" + currentLength + "," + m_RestLength
-                    //    + "[PosA]:" + m_ParticleA.position.x + "," + m_ParticleA.position.y + "," + m_ParticleA.position.z
-                    //    + "[PosB]:" + m_ParticleB.position.x + "," + m_ParticleB.position.y + "," + m_ParticleB.position.z
-                    //    + "[Va]:" + m_ParticleA.velocity.x + "," + m_ParticleA.velocity.y + "," + m_ParticleA.velocity.z
-                    //    + "[Vb]:" + m_ParticleB.velocity.x + "," + m_ParticleB.velocity.y + "," + m_ParticleB.velocity.z
-                    //);
-                }
+                //if (debug)
+                //{
+                //    //Debug.Log("[force]:" + force.x + "," + force.y + "," + force.z
+                //    //    + "[term]:" + springForce + "," + dampingForce
+                //    //    + "[len]:" + currentLength + "," + m_RestLength
+                //    //    + "[PosA]:" + m_ParticleA.position.x + "," + m_ParticleA.position.y + "," + m_ParticleA.position.z
+                //    //    + "[PosB]:" + m_ParticleB.position.x + "," + m_ParticleB.position.y + "," + m_ParticleB.position.z
+                //    //    + "[Va]:" + m_ParticleA.velocity.x + "," + m_ParticleA.velocity.y + "," + m_ParticleA.velocity.z
+                //    //    + "[Vb]:" + m_ParticleB.velocity.x + "," + m_ParticleB.velocity.y + "," + m_ParticleB.velocity.z
+                //    //);
+                //}
                 //apply the equal and opposite forces to the objects
                 if (m_ParticleA.isActive)
                 {

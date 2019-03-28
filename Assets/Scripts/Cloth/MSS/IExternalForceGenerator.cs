@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cloth
+namespace Cloth.MSS
 {
-    class IParticle
+    public interface IExternalForceGenerator
     {
+        void Apply(Particle particle);
     }
 }

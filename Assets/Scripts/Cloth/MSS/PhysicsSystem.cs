@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cloth.Verlet
+namespace Cloth.MSS
 {
     /// <summary>
     /// 重力和弹簧系数要在一个量级上。
@@ -23,10 +23,14 @@ namespace Cloth.Verlet
         protected List<Particle> m_Particles = new List<Particle>();
         //所有弹簧
         protected List<Spring> m_Springs = new List<Spring>();
-        //重力加速度
-        protected Vector3 m_GravityAcceleration=new Vector3(0, -0.981f, 0);
-        //空气阻力
-        protected float m_AirDamping = 0.125f;
+
+        protected List<IExternalForceGenerator> m_ExternalForceGenerators = new List<IExternalForceGenerator>();
+        protected IIntegrator m_Integrator = null;
+
+        ////重力加速度
+        //protected Vector3 m_GravityAcceleration=new Vector3(0, -0.981f, 0);
+        ////空气阻力
+        //protected float m_AirDamping = 0.125f;
         //模拟的步长
         float m_StepInterval=0.01f;
         //步长的平方
@@ -47,8 +51,15 @@ namespace Cloth.Verlet
         public void Step()
         {
             ComputeForces();
-            //IntegrateVerlet();
-            IntegrateEuler();
+            if (m_Integrator != null)
+            {
+                m_Integrator.Integrate(this);
+            }
+            else
+            {
+                //IntegrateVerlet();
+                IntegrateEuler();
+            }
             //Collides();
         }
 
@@ -59,14 +70,19 @@ namespace Cloth.Verlet
         {
             //init gravity and air damping
             Particle particle = null;
+            int k = m_ExternalForceGenerators.Count;
             for (int i = 0, l = m_Particles.Count; i < l; ++i)
             {
                 particle = m_Particles[i];
                 particle.ResetResultantForce();
                 if (particle.isActive)
                 {
-                    particle.AddForce(m_GravityAcceleration * particle.mass);
-                    particle.AddForce(-m_AirDamping * particle.velocity * particle.mass);
+                    for(int j = 0; j < k; ++j)
+                    {
+                        m_ExternalForceGenerators[j].Apply(particle);
+                    }
+                    //particle.AddForce(m_GravityAcceleration * particle.mass);
+                    //particle.AddForce(-m_AirDamping * particle.velocity * particle.mass);
                 }
             }
 
@@ -128,6 +144,16 @@ namespace Cloth.Verlet
             }
         }
 
+        public void AddExternalForceGenerator(IExternalForceGenerator externalForceGenerator)
+        {
+            m_ExternalForceGenerators.Add(externalForceGenerator);
+        }
+
+        public void RemoveExternalForceGenerator(IExternalForceGenerator externalForceGenerator)
+        {
+            m_ExternalForceGenerators.Remove(externalForceGenerator);
+        }
+
         public List<Particle> particles
         {
             get
@@ -161,6 +187,18 @@ namespace Cloth.Verlet
             {
                 m_StepInterval = value;
                 m_DoubleStepInterval = m_StepInterval * m_StepInterval;
+            }
+        }
+
+        public IIntegrator integrator
+        {
+            get
+            {
+                return m_Integrator;
+            }
+            set
+            {
+                m_Integrator = value;
             }
         }
     }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cloth
+namespace Cloth.MSS
 {
     public class Particle
     {
@@ -16,6 +16,8 @@ namespace Cloth
         protected Vector3 m_Velocity = Vector3.zero;
         //合力
         protected Vector3 m_ResultantForce = Vector3.zero;
+        //受空气阻力影响的面积
+        protected float m_Area=1;
 
         protected bool m_Active=true;
 
@@ -80,6 +82,12 @@ namespace Cloth
         {
             get { return m_Active; }
             set { m_Active = value; }
+        }
+
+        public float area
+        {
+            get { return m_Area; }
+            set { m_Area = value; }
         }
     }
 }

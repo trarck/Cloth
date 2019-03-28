@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Cloth.Verlet;
+using Cloth.MSS;
 using UnityEditor;
 
 namespace Cloth

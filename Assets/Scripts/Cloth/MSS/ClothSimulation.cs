@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Cloth.Verlet;
 using UnityEditor;
 
-namespace Cloth
+namespace Cloth.MSS
 {
     public class ClothSimulation
     {
@@ -24,26 +23,13 @@ namespace Cloth
         float m_BledStiffness = 50;
         float m_BledDamping = 0.25f;
 
-        float m_Mass = 10f;
-
-        float m_Factor = 1.0f;
+        float m_ParticleMass = 0.1f;
 
         PhysicsSystem m_System;
 
-        [SerializeField]
-        GameObject m_PointPrefab;
-        List<Transform> m_Points=new List<Transform>();
-
-        long startTime = 0;
-        int frame;
-
         public void Init()
         {
-
-
             SetupGrids();
-            SetUpPoints();
-
             m_System = new PhysicsSystem();
             m_System.particles = m_Particles;
             m_System.springs = m_Springs;
@@ -57,7 +43,7 @@ namespace Cloth
             m_Particles = new List<Particle>();
             int u = m_Column + 1;
             int v = m_Row + 1;
-            float particleMass = 0.1f;// m_Mass/(m_Column*m_Row);
+            float particleMass = m_ParticleMass;
             for (int j = 0; j <= m_Column; ++j)
             {
                 for(int i = 0; i <= m_Row; ++i)
@@ -124,60 +110,6 @@ namespace Cloth
             Debug.LogFormat("Particles:{0},springs:{1}", m_Particles.Count,m_Springs.Count);
         }
 
-        private void OnGUI()
-        {
-            if (GUI.Button(new Rect(20, 200, 100, 40), "Step"))
-            {
-                if (m_System != null)
-                {
-                    m_System.Step();
-                }
-            }
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (m_Springs == null) return;
-
-            //foreach (Spring spring in m_Springs)
-            //{
-            //    Vector3 middle = Vector3.zero;
-
-            //    switch (spring.type)
-            //    {
-            //        case SpringType.Struct:
-            //            Gizmos.color = Color.red;
-            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.2f, 0);
-            //            break;
-            //        case SpringType.Shear:
-            //            Gizmos.color = Color.green;
-            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.4f, 0);
-            //            break;
-            //        case SpringType.Blend:
-            //            Gizmos.color = Color.blue;
-            //            middle = (spring.particleA.position + spring.particleB.position) * 0.5f + new Vector3(0, 0.8f, 0);
-            //            break;
-            //    }
-
-            //    //Gizmos.DrawLine(spring.particleA.position, middle);
-            //    //Gizmos.DrawLine(middle, spring.particleB.position);
-            //    Gizmos.DrawLine(spring.particleA.position, spring.particleB.position);
-            //}
-        }
-
-        void SetUpPoints()
-        {
-            m_Points.Clear();
-            for (int i = 0, l = m_Particles.Count; i < l; ++i)
-            {
-                GameObject pointObj = GameObject.Instantiate(m_PointPrefab, transform);
-                Transform pointTransform = pointObj.transform;
-                pointTransform.localPosition = m_Particles[i].position;
-                m_Points.Add(pointTransform);
-            }
-            m_Points[0].GetChild(0).localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            m_Points[m_Column].GetChild(0).localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        }
 
         Spring CreateSpring(Particle a, Particle b, float ks, float kd,SpringType type)
         {
@@ -191,39 +123,12 @@ namespace Cloth
             return spring;
         }
 
-        private void Start()
+        public void Update()
         {
-            Init();
-            startTime= System.DateTime.Now.Ticks;
-
-        }
-
-        private void Update()
-        {
-            for (int i = 0, l = m_Particles.Count; i < l; ++i)
-            {
-                m_Points[i].localPosition = m_Particles[i].position;
-            }
-
-            long current= System.DateTime.Now.Ticks;
-            if (current - startTime > 10000000)
-            {
-                startTime = current;
-                Debug.LogFormat("{0},{1},{2}",m_System.stepElapsed/10, frame,m_System.stepFrame);
-                m_System.stepElapsed = 0;
-                m_System.stepFrame = 0;
-                frame = 0;
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            //Debug.Log(Time.fixedDeltaTime);
-            ++frame;
             if (m_System != null)
             {
                 //m_System.Step();
-                m_System.Update(Time.fixedDeltaTime*4);
+                m_System.Update(Time.fixedDeltaTime * 4);
             }
         }
     }
